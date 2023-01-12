@@ -10,8 +10,8 @@ async def get_links(request):
         data = await request.json()
         res = []
         for i in data:
-            checkFirstLetterW = data[i].get("username").startswith("w")
-            checkFirstLetterD = data[i].get("username").startswith("d")
+            checkFirstLetterW = data[i].get("username").lower().startswith("w")
+            checkFirstLetterD = data[i].get("username").lower().startswith("d")
             if(checkFirstLetterW):
                 res.append(data[i])
             if(checkFirstLetterD):
