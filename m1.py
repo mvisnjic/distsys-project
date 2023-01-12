@@ -18,6 +18,8 @@ async def get_links(request):
             for row in res:
                 resDict[res.index(row)] = row
             
+            assert isinstance(resDict, dict)
+            
             async with session.post("http://localhost:7002/passdata", json = resDict) as res:
                 result = await res.json()
         return web.json_response(result, status=200)
