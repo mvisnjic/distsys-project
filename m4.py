@@ -1,15 +1,16 @@
 from aiohttp import web
 import aiofiles
+import os
 
 routes = web.RouteTableDef()
 
 async def create_file(element, index, name):
     try:    
             if(index < 9):
-                async with aiofiles.open(f'0{index+1}-{name}.txt', 'w') as f:
+                async with aiofiles.open(f'gatherData/0{index+1}-{name}.txt', 'w') as f:
                     await f.write(str(element))
             else:
-                async with aiofiles.open(f'{index+1}-{name}.txt', 'w') as f:
+                async with aiofiles.open(f'gatherData/{index+1}-{name}.txt', 'w') as f:
                     await f.write(str(element))
     except Exception as e:
         return e
@@ -19,8 +20,6 @@ async def get_links(request):
     try:
         data = await request.json()
 
-        # for test if works change to less then 10
-        # if(len(data) < 10):
         if(len(data) > 10):
             for index, el in enumerate(data):
                 name = el.get("username")
