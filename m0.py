@@ -5,12 +5,13 @@ from aiohttp import web
 import pandas as pd
 
 routes = web.RouteTableDef()
+print("Checking data...") 
 
-df = pd.read_json("file-040.json", lines=True, nrows=10000)
+df = pd.read_json("data/file-040.json", lines=True, nrows=10000)
 
 async def fill_db():
     try:
-        async with aiosqlite.connect("data.db") as db:
+        async with aiosqlite.connect("data/data.db") as db:
             for _, row in df.iterrows():
                     username = row["repo_name"].split("/")[0]
                     repo = row["repo_name"]
@@ -26,8 +27,8 @@ async def fill_db():
     except Exception as e:
         return "ERROR: ", str(e)
 
-async def check_db(): 
-    async with aiosqlite.connect("data.db") as db:
+async def check_db():
+    async with aiosqlite.connect("data/data.db") as db:
         async with db.execute("SELECT COUNT(*) FROM sqlite_schema;") as cur:
             async for row in cur:
                 if(row[0] == 0):
@@ -45,7 +46,7 @@ async def get_links(request):
     try:    
         res = []
         resDict = {}
-        async with aiosqlite.connect("data.db") as db:
+        async with aiosqlite.connect("data/data.db") as db:
             async with db.execute("SELECT * FROM data LIMIT 100;") as cur:
                 async for row in cur:
                     if(row[0] == 0):
@@ -61,6 +62,7 @@ async def get_links(request):
                     resDict.update({namesAndRows[5]:namesAndRows[11]})
                     res.append(resDict.copy())
                 await db.commit()
+                assert isinstance(res,list) and all([isinstance(resDict, dict) for resDict in res])
         return web.json_response({"status":"ok", "data":res}, status=200)
     except Exception as e:
         return web.json_response({"status":"error", "response":e}, status=500)
