@@ -4,4 +4,8 @@ projekt iz kolegija [Raspodijeljeni sustavi](https://e-ucenje.unipu.hr/course/vi
 
 projekt izradio: Matej Višnjić
 
-_Projekt nije izrađen do kraja, napravljen je client.py do kraja, i započet je master servis._
+# pokretanje
+
+1. Prvo pokrenuti svih 10 workera u zasebnom terminalu
+2. Pokrenuti masterServis.py
+3. pokrenuti client.py

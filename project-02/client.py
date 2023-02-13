@@ -13,9 +13,6 @@ for i in range(10000):
     
 df = pd.read_json("data/file-040.json", lines=True, nrows=50000) # only half of a dataframe, because of the CPU
 
-
-# print(df.loc[:, 'content'])
-
 division = len(df) / len(clientID)
 print("division", int(division))
 
@@ -26,9 +23,7 @@ clientDict = {elem:[] for elem in clientID}
 for index,elem in clientDict.items():
     numberOfRowsToTake = index*division
     numberOfRowsTill = numberOfRowsToTake + division
-    # print("dict index:", int(numberOfRowsToTake), "elem:", int(numberOfRowsTill))
     for x in range(len(contentList)):        
-        # print("contentList:", contentList[int(numberOfRowsToTake):int(numberOfRowsTill)])
         elem.append(contentList[int(numberOfRowsToTake):int(numberOfRowsTill)])
         break
     
@@ -47,14 +42,13 @@ async def next():
     try: 
         async with aiohttp.ClientSession() as session:
             for index,elem in clientDict.items():
-                tasks.append(asyncio.create_task(session.get("http://localhost:7000/", json = {"client": index, "codes": elem})))
+                tasks.append(asyncio.create_task(session.get("http://localhost:6000/", json = {"client": index, "codes": elem})))
             res = await asyncio.gather(*tasks)
             res = [await x.json() for x in res]
-            print("Result +")
-            return {"status":"ok", "data":res}
+            print(res)
+            return res
     except (aiohttp.ClientError, asyncio.TimeoutError):
         await asyncio.sleep(5)
         return await next()
-         
 
 asyncio.get_event_loop().run_until_complete(next())           
