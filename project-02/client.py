@@ -40,6 +40,7 @@ async def next():
     tasks = []
     
     try: 
+        print("Waiting for response...")
         async with aiohttp.ClientSession() as session:
             for index,elem in clientDict.items():
                 tasks.append(asyncio.create_task(session.get("http://localhost:6000/", json = {"client": index, "codes": elem})))

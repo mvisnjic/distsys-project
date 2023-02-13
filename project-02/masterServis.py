@@ -18,6 +18,7 @@ logging.basicConfig(
     level=logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
 
+recivedRequests = 0
 M = 1000
 sendTask = 0
 completedTasks = 0
@@ -25,8 +26,7 @@ currWorker = 1
 @routes.get("/")
 async def get_function(req):
     try:
-        global received_requests
-        global send_tasks
+        global recivedRequests
         global currWorker
         global sendTask
         global completedTasks
@@ -34,8 +34,8 @@ async def get_function(req):
         tasks = []
         res = []
         data = await req.json()
-        received_requests += 1
-        logging.info(f"Received new request: {received_requests} / {max_number}")
+        recivedRequests += 1
+        logging.info(f"Received new request: {recivedRequests} / {max_number}")
         dataCodes = data.get("codes")
         dataDict = {i:code for i,code in enumerate(dataCodes)}
         
@@ -48,7 +48,7 @@ async def get_function(req):
                     currWorker = 1
                 else:
                     currWorker += 1
-                logging.info(f"Sending: {sendTask} / {received_requests}")
+                logging.info(f"Sending: {sendTask} / {recivedRequests}")
                 
                     
             res = await asyncio.gather(*tasks)
